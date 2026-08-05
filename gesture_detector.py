@@ -34,7 +34,9 @@ class GestureDetector:
 
     def detect_thumbs_up(self, landmarks, finger_states):
         other_fingers_folded = all(state == 0 for state in finger_states[1:])
-        thumb_pointing_up = landmarks[4][1] < landmarks[3][1] < landmarks[2][1]
+        # Allow a small tolerance when comparing Y coordinates of thumb landmarks
+        tolerance = 0.02
+        thumb_pointing_up = (landmarks[4][1] < landmarks[3][1] + tolerance) and (landmarks[3][1] < landmarks[2][1] + tolerance)
         return other_fingers_folded and thumb_pointing_up
 
     def detect_fist(self, finger_states):
@@ -105,11 +107,10 @@ class GestureDetector:
             raw = "Thumbs Up"
         elif self.detect_open_palm(finger_states):
             raw = "Open Palm"
-        elif self.detect_fist(finger_states):
-            raw = "Fist"
         elif self.detect_pinch(landmarks):
             raw = "Pinch"
-
+        elif self.detect_fist(finger_states):
+            raw = "Fist"
         # Update timing for the raw gesture
         now = time.time()
         if raw != self.current_raw:
@@ -132,10 +133,9 @@ class GestureDetector:
                 self._record_action("Pinch")
             else:
                 on_cooldown = True
-        elif raw == "Open Palm" and hold_time >= OPEN_PALM_HOLD:
-            # Swipe detection only after open palm hold
+        elif raw == "Open Palm":
+            # Swipe detection independent of open‑palm hold duration.
             palm_center = None
-            # Landmarks[9] is the palm centre in MediaPipe
             if len(landmarks) >= 10:
                 palm_center = landmarks[9][:2]
             if palm_center:
