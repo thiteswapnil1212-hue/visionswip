@@ -4,6 +4,7 @@ import numpy as np
 from config import CAMERA_ID, FRAME_WIDTH, FRAME_HEIGHT
 from hand_tracker import HandTracker
 from gesture_detector import GestureDetector
+from instagram_controller import dispatch_action
 
 def main():
     print("Starting VisionSwipe AI stream...")
@@ -39,6 +40,10 @@ def main():
 
             # Detect gesture, associated action, hold time, and cooldown status
             gesture, action, hold_time, on_cooldown = detector.get_current_gesture(landmarks)
+
+            # Trigger the corresponding Instagram controller action (placeholder)
+            if action:
+                dispatch_action(action)
 
             # Calculate FPS
             curr_time = time.time()

@@ -22,3 +22,11 @@ THUMBS_UP_HOLD = 0.8             # Seconds thumb-up must be held
 PINCH_HOLD = 0.5                 # Seconds pinch must be held
 OPEN_PALM_HOLD = 1.5            # Seconds open palm must be held before confirming scroll
 ACTION_COOLDOWN = 1.0           # Generic cooldown for any action
+
+# Phase 5B – Instagram automation configuration
+# Set TEST_MODE = True to run in safe mode (no mouse/keyboard actions). Set to False for real automation.
+TEST_MODE = True
+
+# Screen coordinates for Instagram UI elements (in pixels). Adjust these to match your screen resolution.
+LIKE_BUTTON_POSITION = (1000, 500)   # Example placeholder – move mouse here to click LIKE
+SHARE_BUTTON_POSITION = (1200, 500)  # Example placeholder – move mouse here to click SHARE
