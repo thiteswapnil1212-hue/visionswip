@@ -1,0 +1,10 @@
+# Core Libraries
+opencv-python
+mediapipe
+numpy
+pyautogui
+
+# Development Libraries
+pip
+setuptools
+wheel
