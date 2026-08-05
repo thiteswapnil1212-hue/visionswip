@@ -1,5 +1,6 @@
 import cv2
 import time
+import numpy as np
 from config import CAMERA_ID, FRAME_WIDTH, FRAME_HEIGHT
 from hand_tracker import HandTracker
 from gesture_detector import GestureDetector
@@ -28,8 +29,9 @@ def main():
         while True:
             ret, frame = cap.read()
             if not ret:
-                print("Error: Failed to grab frame.")
-                break
+                # Fallback: generate a blank frame to keep the loop alive
+                frame = np.zeros((FRAME_HEIGHT, FRAME_WIDTH, 3), dtype=np.uint8)
+                print("Warning: Failed to grab frame; using blank placeholder.")
 
             # Process hand tracking and draw skeleton
             frame = tracker.find_hands(frame)
