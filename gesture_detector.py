@@ -103,12 +103,13 @@ class GestureDetector:
 
         # Determine raw gesture name
         raw = "No Gesture"
-        if self.detect_thumbs_up(landmarks, finger_states):
+        # Prioritize pinch detection before other gestures
+        if self.detect_pinch(landmarks):
+            raw = "Pinch"
+        elif self.detect_thumbs_up(landmarks, finger_states):
             raw = "Thumbs Up"
         elif self.detect_open_palm(finger_states):
             raw = "Open Palm"
-        elif self.detect_pinch(landmarks):
-            raw = "Pinch"
         elif self.detect_fist(finger_states):
             raw = "Fist"
         # Update timing for the raw gesture

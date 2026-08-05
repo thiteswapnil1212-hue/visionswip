@@ -2,6 +2,7 @@
 # Run with TEST_MODE=True for safe execution.
 
 import time
+import copy
 from gesture_detector import GestureDetector
 from config import (
     SWIPE_THRESHOLD,
