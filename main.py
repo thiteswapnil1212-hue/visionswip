@@ -35,8 +35,8 @@ def main():
             frame = tracker.find_hands(frame)
             landmarks = tracker.get_landmarks(frame)
 
-            # Detect gesture and finger count
-            gesture, fingers = detector.get_current_gesture(landmarks)
+            # Detect gesture, associated action, hold time, and cooldown status
+            gesture, action, hold_time, on_cooldown = detector.get_current_gesture(landmarks)
 
             # Calculate FPS
             curr_time = time.time()
@@ -44,10 +44,12 @@ def main():
             prev_time = curr_time
 
             # Draw Information on Stream
-            # Visual styles: Harmonious overlay with sleek background/contrast text
             cv2.putText(frame, f"FPS: {int(fps)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
             cv2.putText(frame, f"Gesture: {gesture}", (10, 70), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 0, 0), 2)
-            cv2.putText(frame, f"Fingers: {fingers}", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+            cv2.putText(frame, f"Action: {action if action else '—'}", (10, 110), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+            cv2.putText(frame, f"Hold: {hold_time:.2f}s", (10, 150), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 200, 200), 2)
+            cv2.putText(frame, f"Cooldown: {'Yes' if on_cooldown else 'No'}", (10, 190), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (200, 0, 200), 2)
+            cv2.putText(frame, f"Fingers: {detector.confirmed_fingers}", (10, 230), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
             # Display the stream
             cv2.imshow("VisionSwipe AI - Hand & Gesture Feed", frame)
