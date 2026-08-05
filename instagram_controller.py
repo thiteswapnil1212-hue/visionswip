@@ -7,6 +7,8 @@ import pyautogui
 from config import (
     LIKE_BUTTON_POSITION,
     SHARE_BUTTON_POSITION,
+    SEND_BUTTON_POSITION,
+    FRIEND_POSITIONS,
     TEST_MODE,
 )
 
@@ -35,6 +37,7 @@ def scroll_up():
 
     In Instagram the next reel is reached by scrolling *up* (positive scroll).
     """
+    print("[DEBUG] scroll_up() called")
     # A modest scroll amount works well for most screen resolutions.
     _safe_action(pyautogui.scroll, 500)
     time.sleep(0.2)  # brief delay after the action
@@ -45,6 +48,7 @@ def scroll_down():
 
     Scrolling *down* (negative scroll) moves to the previous reel.
     """
+    print("[DEBUG] scroll_down() called")
     _safe_action(pyautogui.scroll, -500)
     time.sleep(0.2)
 
@@ -55,6 +59,7 @@ def like_post():
     The button coordinates are defined in ``config.LIKE_BUTTON_POSITION`` as a
     ``(x, y)`` tuple representing screen pixels.
     """
+    print("[DEBUG] like_post() called")
     x, y = LIKE_BUTTON_POSITION
     _safe_action(pyautogui.moveTo, x, y, duration=0.2)
     _safe_action(pyautogui.click)
@@ -65,18 +70,42 @@ def open_share():
 
     Uses the screen coordinates from ``config.SHARE_BUTTON_POSITION``.
     """
+    print("[DEBUG] open_share() called")
     x, y = SHARE_BUTTON_POSITION
     _safe_action(pyautogui.moveTo, x, y, duration=0.2)
     _safe_action(pyautogui.click)
     time.sleep(0.2)
 
 def cancel_action():
-    """Cancel the current Instagram action (e.g., close dialogs).
-
-    Sends an ``Esc`` key press.
-    """
+    """Cancel the current Instagram action (e.g., close dialogs)."""
+    print("[DEBUG] cancel_action() called")
     _safe_action(pyautogui.press, "esc")
     time.sleep(0.2)
+
+def select_friend(friend_index: int):
+    """Select Friend 1-5 in Instagram share dialog.
+
+    Uses coordinates from config.FRIEND_POSITIONS.
+    """
+    print(f"[DEBUG] select_friend({friend_index}) called")
+    pos = FRIEND_POSITIONS.get(friend_index)
+    if pos:
+        x, y = pos
+        _safe_action(pyautogui.moveTo, x, y, duration=0.2)
+        _safe_action(pyautogui.click)
+        time.sleep(0.2)
+
+def send_share():
+    """Click Send button in Instagram share dialog.
+
+    Uses coordinates from config.SEND_BUTTON_POSITION.
+    """
+    print("[DEBUG] send_share() called")
+    x, y = SEND_BUTTON_POSITION
+    _safe_action(pyautogui.moveTo, x, y, duration=0.2)
+    _safe_action(pyautogui.click)
+    time.sleep(0.2)
+
 
 # Simple dispatcher that maps the high‑level action name returned by GestureDetector
 # to the corresponding function defined above.
@@ -97,5 +126,6 @@ def dispatch_action(action_name: str):
     }
     func = mapping.get(action_name)
     if func:
+        print(f"[DEBUG][Dispatcher] Calling function for action '{action_name}'")
         func()
     # If the action is ``None`` or not recognised we simply do nothing.

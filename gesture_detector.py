@@ -68,13 +68,17 @@ class GestureDetector:
         """
         if self.prev_palm_center is None:
             self.prev_palm_center = palm_center
+            print(f"[DEBUG][Swipe] First palm_center: {palm_center}")
             return None
         delta_y = palm_center[1] - self.prev_palm_center[1]
+        print(f"[DEBUG][Swipe] prev: {self.prev_palm_center}, current: {palm_center}, delta_y: {delta_y}")
         self.prev_palm_center = palm_center
         # Positive delta_y means moving downwards in image coordinates
         if delta_y < -SWIPE_THRESHOLD:
+            print("[DEBUG][Swipe] Detected Scroll Up")
             return "Scroll Up"
         if delta_y > SWIPE_THRESHOLD:
+            print("[DEBUG][Swipe] Detected Scroll Down")
             return "Scroll Down"
         return None
 
@@ -112,6 +116,14 @@ class GestureDetector:
             raw = "Open Palm"
         elif self.detect_fist(finger_states):
             raw = "Fist"
+        elif finger_count == 1:
+            raw = "1 Finger"
+        elif finger_count == 2:
+            raw = "2 Fingers"
+        elif finger_count == 3:
+            raw = "3 Fingers"
+        elif finger_count == 4:
+            raw = "4 Fingers"
         # Update timing for the raw gesture
         now = time.time()
         if raw != self.current_raw:
