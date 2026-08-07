@@ -31,17 +31,34 @@ TEST_MODE = False  # Disable test mode for real Instagram interaction
 SHARE_CONFIRM_HOLD = 0.8          # Hold duration for Open Palm in Share Mode to confirm send
 FINGER_HOLD = 0.3                 # Hold duration for finger selection gestures
 
-# Screen coordinates for Instagram UI elements (in pixels). Adjust these to match your screen resolution.
-LIKE_BUTTON_POSITION = (1000, 500)   # Placeholder – move mouse here to click LIKE
-SHARE_BUTTON_POSITION = (1200, 500)  # Placeholder – move mouse here to click SHARE
-SEND_BUTTON_POSITION = (1000, 620)   # Placeholder – move mouse here to click SEND in share dialog
+# ==============================================================================
+# SCREEN COORDINATES CALIBRATION FOR INSTAGRAM WEB UI
+# ==============================================================================
+# How to update coordinates:
+# Option 1: Run `python calibrate_coordinates.py` and follow on-screen keys:
+#   - Press 'L' to set LIKE_BUTTON_POSITION
+#   - Press 'S' to set SHARE_BUTTON_POSITION
+#   - Press '1'-'5' to set FRIEND_POSITIONS (Friends 1 to 5)
+#   - Press 'E' or Enter to set SEND_BUTTON_POSITION
+#   - Press 'W' to automatically save new coordinates to config.py
+#
+# Option 2: Manually replace pixel values (X, Y) below matching your monitor screen resolution.
+# ==============================================================================
 
-# Coordinates for selecting Friend 1 to 5 in Instagram share dialog
+# Screen coordinate (X, Y) for clicking the Instagram Reel Like button
+LIKE_BUTTON_POSITION = (1000, 500)
+
+# Screen coordinate (X, Y) for clicking the Instagram Reel Share button
+SHARE_BUTTON_POSITION = (1200, 500)
+
+# Screen coordinate (X, Y) for clicking the Send button in Instagram share dialog
+SEND_BUTTON_POSITION = (1000, 620)
+
+# Screen coordinates (X, Y) for selecting Friend 1 through 5 in Instagram share dialog
 FRIEND_POSITIONS = {
-    1: (1000, 300),
-    2: (1000, 360),
-    3: (1000, 420),
-    4: (1000, 480),
-    5: (1000, 540),
+    1: (1000, 300),  # Friend 1
+    2: (1000, 360),  # Friend 2
+    3: (1000, 420),  # Friend 3
+    4: (1000, 480),  # Friend 4
+    5: (1000, 540),  # Friend 5
 }
-
