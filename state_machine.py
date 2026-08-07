@@ -120,7 +120,7 @@ class StateMachine:
                 self.status_message = "Share Cancelled"
                 executed_action = "Cancel Share"
 
-        elif gesture == "Open Palm" and hold_time >= SHARE_CONFIRM_HOLD:
+        elif gesture == "Open Palm":
             if self.selected_friend is not None:
                 self.state = AppState.CONFIRMING
                 return self._handle_confirming(gesture, action, finger_count, hold_time)
@@ -130,12 +130,19 @@ class StateMachine:
         elif finger_count in [1, 2, 3, 4, 5]:
             friend_idx = finger_count
             key = f"Select Friend {friend_idx}"
-            if not self._is_on_cooldown(key, cooldown_duration=FINGER_HOLD + 0.2):
+            cooldown_key = "friend_selection"
+            if not self._is_on_cooldown(cooldown_key, cooldown_duration=ACTION_COOLDOWN) and not self._is_on_cooldown(key, cooldown_duration=ACTION_COOLDOWN):
                 select_friend(friend_idx)
                 self._record_action(key)
+                self._record_action(cooldown_key)
                 self.selected_friend = friend_idx
                 self.status_message = f"Selected Friend {friend_idx}"
                 executed_action = f"Select Friend {friend_idx}"
+            else:
+                if self.selected_friend is not None:
+                    self.status_message = f"Friend {self.selected_friend} Selected (Hold Open Palm to Send)"
+                else:
+                    self.status_message = "Share Mode - Show 1-5 Fingers"
 
         else:
             if self.selected_friend is not None:
@@ -146,10 +153,29 @@ class StateMachine:
         return self.state.name, self.status_message, executed_action
 
     def _handle_confirming(self, gesture: str, action: str, finger_count: int, hold_time: float) -> tuple:
-        send_share()
-        self._record_action("Send Share")
-        friend = self.selected_friend
-        self.state = AppState.NORMAL_MODE
-        self.selected_friend = None
-        self.status_message = f"Reel Shared to Friend {friend}!"
-        return AppState.NORMAL_MODE.name, self.status_message, f"Sent Share to Friend {friend}"
+        executed_action = None
+
+        if gesture == "Open Palm":
+            if hold_time >= SHARE_CONFIRM_HOLD:
+                send_share()
+                self._record_action("Send Share")
+                friend = self.selected_friend
+                self.state = AppState.NORMAL_MODE
+                self.selected_friend = None
+                self.status_message = f"Reel Shared to Friend {friend}!"
+                executed_action = f"Sent Share to Friend {friend}"
+            else:
+                self.status_message = f"Confirming Send (Hold Open Palm {SHARE_CONFIRM_HOLD}s)..."
+        elif gesture == "Fist":
+            if not self._is_on_cooldown("Fist"):
+                cancel_action()
+                self._record_action("Fist")
+                self.state = AppState.NORMAL_MODE
+                self.selected_friend = None
+                self.status_message = "Share Cancelled"
+                executed_action = "Cancel Share"
+        else:
+            self.state = AppState.SHARE_MODE
+            self.status_message = f"Friend {self.selected_friend} Selected (Hold Open Palm to Send)"
+
+        return self.state.name, self.status_message, executed_action
