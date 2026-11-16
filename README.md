@@ -34,6 +34,19 @@ When **Pinch** is detected in Normal Mode, the app enters **SHARE MODE** and dis
 
 ---
 
+## Architecture
+
+```mermaid
+flowchart LR
+    Cam([Webcam]) --> Main["main.py<br/>main loop · HUD · overlay"]
+    Main --> HT["HandTracker<br/>MediaPipe · hand_tracker.py"]
+    HT --> GD["GestureDetector<br/>poses · finger counts"]
+    GD --> SM["State Machine<br/>NORMAL · SHARE · CONFIRMING"]
+    SM --> IG["Instagram Controller<br/>PyAutoGUI mouse + keyboard"]
+    IG --> Insta["Instagram Web<br/>like · scroll · share · send"]
+    SM --> Cfg["config.py<br/>coordinates · timings · TEST_MODE"]
+```
+
 ## Project Structure
 
 ```text
